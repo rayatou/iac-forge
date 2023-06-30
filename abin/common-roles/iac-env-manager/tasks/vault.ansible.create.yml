@@ -1,0 +1,48 @@
+---
+- name: "CloudEngine | Cloud | Ansible Vault Create | Include Secret Configuration {{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.secret.yml"
+  ansible.builtin.include_vars: "{{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.secret.yml"
+  become: false
+  delegate_to: localhost
+
+- name: "CloudEngine | Cloud | Ansible Vault Create | echo {{ CloudSecretProvider.ansible_password }} > {{ CloudSecretProvider.ansible_password_file }}"
+  ansible.builtin.shell: "echo {{ CloudSecretProvider.ansible_password }} > {{ CloudSecretProvider.ansible_password_file }}"
+  become: false
+  delegate_to: localhost
+
+- debug:
+    var: CloudEnvConfig
+
+- name: "CloudEngine | Cloud | Ansible Vault Create | Copy vault.ansible.create.shell to /tmp/vault.ansible.create.shell"
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0770
+  become: false
+  delegate_to: localhost
+  register: cmd_output
+  with_items:
+    - vault.ansible.create.shell
+    - vault.sshkey.j2
+
+- name: "CloudEngine | Cloud | Ansible Vault Create | Create Private Key from {{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.vault.cyml to {{ CloudSecretProvider.ssh_private_key_file }} using pass in {{ CloudSecretProvider.ansible_password_file }}"
+  ansible.builtin.shell: "/tmp/vault.ansible.create.shell"
+  args:
+    chdir: /tmp
+  environment:
+    mSECRET_FILE: "{{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.vault.cyml"
+    mSECRET_PASSWORD_FILE: "{{ CloudSecretProvider.ansible_password_file }}"
+    mPRIVATE_KEY: "{{ CloudSecretProvider.ssh_private_key_file }}"
+  become: false
+  delegate_to: localhost
+  register: cmd_output
+
+- debug:
+    var: cmd_output
+
+- name: "CloudEngine | Cloud | Ansible Vault Create | Clean Private Key file because... shit happens  "
+  ansible.builtin.command: "sed -i 's/^ //' {{ CloudSecretProvider.ssh_private_key_file }}"
+  become: false
+  delegate_to: localhost
+
+- debug:
+    var: cmd_output

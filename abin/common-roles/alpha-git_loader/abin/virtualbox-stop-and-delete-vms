@@ -1,0 +1,8 @@
+#!/bin/bash
+
+vboxmanage list vms
+
+vboxmanage list vms | awk '{ print $1 }' | xargs -I{} vboxmanage controlvm {} poweroff 
+
+vboxmanage list vms | awk '{ print $1 }' | xargs -I{} vboxmanage unregistervm {} --delete 
+ 

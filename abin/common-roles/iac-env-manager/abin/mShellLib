@@ -1,0 +1,211 @@
+#!/bin/bash
+###############################################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+###############################################################################
+mScript=`basename "$0"`
+mIncDir=`dirname ${BASH_SOURCE}`
+export abinDir=`dirname ${BASH_SOURCE}`
+
+source $abinDir/mShellLib-Core
+
+###############################################################################
+## Function: mDebugPrintEnvVars
+## Parses Environement Variables and prints out all ENvironment variables that 
+## contains the folling patterns: ANSIBLE_, CI_, DOCKER_, ROLE_NAME
+##
+## Args: None
+###############################################################################
+function mDebugPrintEnvVars() {
+  set +x
+  echo ""
+  echo ""
+  echo "***********************************************"
+  echo "** ENV VARS SET"
+  echo "***********************************************"
+  env | sort -u | grep "ANSIBLE_"    | sed "s/^/**  /" |  sed "s/=/ :    \t/" 
+  env | sort -u  | grep "CI_"        | sed "s/^/**  /" |  sed "s/=/ :    \t/" 
+  env | sort -u  | grep "DOCKER_"    | sed "s/^/**  /" |  sed "s/=/ :    \t/" 
+  env | sort -u  | grep "ROLE_NAME"  | sed "s/^/**  /" |  sed "s/=/ :    \t/" 
+  echo "***********************************************"
+  echo ""
+}
+
+
+###############################################################################
+## Function: mDebugPrintEnvDocker
+## Parses Environement Variables for Docker Builds
+##
+## Args: None
+###############################################################################
+function mDebugPrintEnvDocker() {
+ echo "***********************************************"
+  echo "** CI_TENANT:                     $CI_TENANT"
+  echo "** CI_PROJECT_NAME:               $CI_PROJECT_NAME"
+  echo "** REPO_DOCKER_BUILDAH_IMAGE:     $REPO_DOCKER_BUILDAH_IMAGE"
+  echo "** REPO_DOCKER_HOST:              $REPO_DOCKER_HOST"
+  echo "** REPO_DOCKER_USER:              $REPO_DOCKER_USER"
+  echo "** REPO_DOCKER_PASSWORD:          $REPO_DOCKER_PASSWORD"
+  echo "** REPO_DOCKER_REGISTRY_SNAPSHOT: $REPO_DOCKER_REGISTRY_SNAPSHOT"
+  echo "** IMAGE_NAME:                    $IMAGE_NAME"
+  echo "** IMAGE_VERSION:                 $IMAGE_VERSION"
+  echo "** IMAGE_TAG:                     $IMAGE_TAG"
+  echo "** IMAGE_REPONAME:                $IMAGE_REPONAME"
+  echo "** IMAGE_DOCKERFILE:              $IMAGE_DOCKERFILE"
+  echo "** IMAGE_BUILD_ARGS:              $IMAGE_BUILD_ARGS"
+  echo "** IMAGE_VERSION:                 $IMAGE_VERSION"
+  echo "** CA_ROOT_CRT_URL:               $CA_ROOT_CRT_URL"
+  echo "***********************************************"
+}
+
+
+###############################################################################
+## Function: mDockerSetEnv
+## Sets Environement Variables for Docker
+##
+## Args: None
+###############################################################################
+function mAnsibleSetEnv() {
+  if [ "x${ANSIBLE_REPO}x" == "xx" ]; then
+    if [ "x${ANSIBLE_REPO_SNAPSHOT}x" == "xx" ]; then
+      INTERNAL_ERROR=101
+      INTERNAL_MSG="Variable ANSIBLE_REPO is not set"
+      exitOnError
+    else
+      export ANSIBLE_REPO=$ANSIBLE_REPO_SNAPSHOT
+      echo "*** Variable ANSIBLE_REPO is empty. Taking ANSIBLE_REPO_SNAPSHOT value instead."
+    fi 
+  fi  
+
+  if [ "x${ANSIBLE_REPO_USER}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable ANSIBLE_REPO_USER is not set"
+    exitOnError
+  fi  
+
+  if [ "x${ANSIBLE_REPO_PASS}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable ANSIBLE_REPO_PASS is not set"
+    exitOnError
+  fi  
+
+  if [ "x${ANSIBLE_REPO_HOST}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable ANSIBLE_REPO_HOST is not set"
+    exitOnError
+  fi  
+
+  if [ "x${ROLE_NAME}x" == "xx" ]; then
+    if [ "x${CI_PROJECT_NAME}x" == "xx" ]; then
+      INTERNAL_ERROR=101
+      INTERNAL_MSG="Variable ROLE_NAME is not set"
+      exitOnError
+    else
+      export ROLE_NAME=$CI_PROJECT_NAME
+      echo "*** Variable ROLE_NAME is empty. Taking CI_PROJECT_NAME value instead."
+    fi 
+  fi  
+
+  if [ "x${ROLE_VERSION}x" == "xx" ]; then
+    export ROLE_VERSION="v1.1"
+    echo "*** Variable ROLE_VERSION is empty. Taking Snapshot Date instead: $ROLE_VERSION"
+  fi
+}
+
+###############################################################################
+## Function: mDockerSetEnv
+## Sets Environement Variables for Docker
+## 
+## Args: None
+###############################################################################
+function mDockerSetEnv() {
+
+  if [ "x${CI_SETENV}x" == "xTRUEx" ]; then
+    export UUID="tmpfile-`date | md5sum | cut -d' ' -f1`"
+    mInfoMessage "Deleting previously created temporary files"
+    rm -f "tmpfile-*"
+    env | grep REPO_DOCKER >> $UUID
+    env | grep IMAGE_ >> $UUID
+    env | grep CA_ROOT_CRT_URL >> $UUID
+    echo "STORAGE_DRIVER=vfs"  >> $UUID
+    sed -i 's/^/export /' $UUID
+    source $UUID
+  fi
+
+  if [ "x${REPO_DOCKER_HOST}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable REPO_DOCKER_HOST is not set"
+    mErrorMessageAndExit $INTERNAL_MSG $INTERNAL_ERROR
+  fi  
+
+  if [ "x${REPO_DOCKER_USER}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable REPO_DOCKER_USER is not set"
+    mErrorMessageAndExit $INTERNAL_MSG $INTERNAL_ERROR
+  fi  
+
+  if [ "x${REPO_DOCKER_PASSWORD}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable REPO_DOCKER_PASSWORD is not set"
+    mErrorMessageAndExit $INTERNAL_MSG $INTERNAL_ERROR
+  fi  
+
+  if [ "x${IMAGE_NAME}x" == "xx" ]; then
+    if [ "x${CI_PROJECT_NAME}x" == "xx" ]; then
+      INTERNAL_ERROR=101
+      INTERNAL_MSG="Variable IMAGE_NAME is not set"
+      mErrorMessageAndExit $INTERNAL_MSG $INTERNAL_ERROR
+    else
+      export IMAGE_NAME=$CI_PROJECT_NAME
+      echo "*** Variable IMAGE_NAME is empty. Taking CI_PROJECT_NAME value instead."
+    fi 
+  fi  
+
+  if [ "x${IMAGE_VERSION}x" == "xx" ]; then
+      export IMAGE_VERSION=`date +'%Y-%m-%d--%H-%M-%S'`
+      export IMAGE_VERSION="${IMAGE_VERSION}-snapshot"
+      echo "*** Variable IMAGE_VERSION is empty. Taking Snapshot Date instead: $ROLE_VERSION"
+  fi  
+
+  if [ "x${IMAGE_REPONAME}x" == "xx" ]; then
+      echo "*** Warning IMAGE_REPONAME is empty."
+  else
+      export IMAGE_REPONAME=${IMAGE_REPONAME}/
+  fi
+
+  if [ "x${IMAGE_DOCKERFILE}x" == "xx" ]; then
+      export IMAGE_DOCKERFILE="./Dockerfile"
+      echo "*** Variable IMAGE_DOCKERFILE is empty. Taking $IMAGE_DOCKERFILE"
+  fi  
+
+  if [ "x${IMAGE_DOCKERFILE_TARGET}x" != "xx" ]; then
+      export IMAGE_DOCKERFILE_TARGET="--target "
+      echo "*** Variable IMAGE_DOCKERFILE is empty. Taking $IMAGE_DOCKERFILE"
+  fi  
+
+  export IMAGE_TAG=$REPO_DOCKER_HOST/$IMAGE_REPONAME$IMAGE_NAME:$IMAGE_VERSION
+
+  mDebugPrintEnvDocker
+}
+
+
+if [ "x${CI_ENV}x" == "xGITLAB_CIx" ]; then
+  mInfoMessage "Environement is provided by Gitlab"
+elif [ "x${CI_ENV}x" == "xGITLAB_CI_EXECx" ]; then
+  mInfoMessage "Environement is provided by Gitlab Local Exec"
+else
+  ## CI_TENANT allows to inject context
+  if [[ -z "$CI_TENANT" ]]; then
+    mErrorMessage "Must provide CI_TENANT as environment variable" 
+    exit 1
+  fi
+  source ${mIncDir}/../vars/${CI_TENANT}/vars.sh
+
+fi

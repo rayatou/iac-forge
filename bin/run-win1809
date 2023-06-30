@@ -1,0 +1,11 @@
+mkdir -p tmp
+rm -rf tmp/WIN-1809-2019.$1
+cp -r images/Win1809-Windows-2019-$1-HCL/ tmp/WIN-1809-2019.$1
+cp resources/definitions.pkr.hcl tmp/WIN-1809-2019.$1
+cp resources/common.pkrvars.hcl tmp/WIN-1809-2019.$1
+cp resources/win-2019-${1,,}.pkrvars.hcl tmp/WIN-1809-2019.$1
+mkdir tmp/WIN-1809-2019.$1/scripts
+cp images/WindowsScripts/* tmp/WIN-1809-2019.$1/scripts/
+
+cd tmp/WIN-1809-2019.$1 &&  packer-1.7 init . && packer-1.7 build -force -var-file="win-2019-${1,,}.pkrvars.hcl" -var-file="common.pkrvars.hcl" --var-file="variables.auto.pkrvars.hcl" . && echo ""
+rm -rf tmp/WIN-1809-2019.$1

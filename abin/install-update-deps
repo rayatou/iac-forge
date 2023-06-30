@@ -1,0 +1,36 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/mShellLib
+
+echo  "**** Moving to $mIncDir directory"
+cd $mIncDir
+cd ..
+
+rm -rf shell-ci-utils
+git clone ${GIT_REPO_SHELL_CI_UTILS}
+
+rm -rf abin
+mv shell-ci-utils/abin  . 
+mv shell-ci-utils/vars/ADLERE  abin/TENANT.ExampleCopyItToVars
+mkdir -p vars 
+
+chmod +x abin/install-update-deps
+rm -rf $mIncDir/common-roles 
+ansible-galaxy install -p $mIncDir/common-roles -r $mIncDir/../vars/${CI_TENANT}/requirements.yml 
+
+rm -rf shell-ci-utils
+
+echo "Updating submodules"
+git submodule update --init --force --remote ; 

@@ -1,0 +1,43 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/../abin/mShellLib
+source $mIncDir/../abin/mShellLib-GitLab
+
+mGitEnv
+mGitEnvDebug
+
+project_url=$(echo $CI_PROJECT_URL | sed 's/https:\/\///')
+git remote set-url origin https://${IAC_GIT_USERNAME}:${IAC_GIT_TOKEN}@$project_url
+
+git add .gitlab-ci.yml
+git add .gitignore
+git add *
+git status 
+    
+# Check if we have modifications to commit
+CHANGES=$(git status --porcelain | wc -l)
+
+if [ "$CHANGES" -gt "0" ]; then
+  # Show the status of files that are about to be created, updated or deleted
+  git status
+
+  # Commit all changes
+  git commit -m "${IAC_GIT_MESSAGE}"
+
+  # Update the repository and make sure to skip the pipeline create for this commit
+  git push origin HEAD:IaC
+  #git push origin -o ci.skip
+
+fi

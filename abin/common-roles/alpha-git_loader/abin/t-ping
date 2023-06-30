@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export INCDIR=$(dirname "$0")
+source "$INCDIR/../bin/__config__"
+source "${INCDIR}/../abin/__ShellLibrary__"
+
+set -x
+eval "$ANSIBLE_CMD"  "$INCDIR/ansible-lib/ping.yml" $@
+

@@ -1,0 +1,5 @@
+---
+- name: "CloudEngine | Cloud | Ansible Vault Load | Loading Secrets Vars {{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.vault.cyml"
+  ansible.builtin.include_vars: "{{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.vault.cyml"
+  become: false
+  delegate_to: localhost

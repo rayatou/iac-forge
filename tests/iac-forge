@@ -1,0 +1,26 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+mScript=`basename "$0"`
+mIncDir=`dirname $0`
+source $mIncDir/../abin/mShellLib
+
+export IMAGE_OS=ubi8-minimal
+export IMAGE_NAME="iac-forge"
+export IMAGE_VERSION="latest"
+export IMAGE_DOCKERFILE="./Dockerfile"
+export IMAGE_REPONAME="$REPO_DOCKER_REGISTRY_SNAPSHOT"
+export IMAGE_BUILD_ARGS="\" \
+  --build-arg CA_ROOT_CRT_URL=${CA_ROOT_CRT_URL} \
+  \""
+
+$mIncDir/../abin/ci-docker-build

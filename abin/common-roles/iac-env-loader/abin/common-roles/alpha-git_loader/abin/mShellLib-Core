@@ -1,0 +1,85 @@
+#!/bin/bash
+######################################################
+
+
+###############################################################################
+## Function: mInfoMessage
+## Prints on stdout a message
+##
+## Args: 
+##   1 - Message to print
+###############################################################################
+function mInfoMessage() {
+  mMessage=$1 
+  echo "  [INFO][$mScript] $mMessage"  
+}  
+
+
+################################################################################
+## Function: mInfoMessage
+## Prints on stdout a message if mDebugMode is set to TRUE.
+##
+## Args: 
+##   1 - Message to print
+###############################################################################
+function mDebugMessage() {
+  mMessage=$1 
+  
+  if  [[ -z "$mDebugMode" &&  "$mDebugMode" == "TRUE" ]] ; then
+    echo "  [DEBUG][$mScript] $mMessage"  
+  fi
+}  
+
+
+###############################################################################
+## Function: mErrorMessage
+## Prints on stdout and stderr a message then exit
+##
+## Args: 
+##   1 - Message to print
+##   2 - Exit Code (Optional)
+###############################################################################
+function mErrorMessage() {
+  mMessage=$1 
+  echo "  [ERROR][$mScript] *** $mMessage ***"  1>&2
+} 
+
+
+###############################################################################
+## Function: mErrorMessageAndExit
+## Prints on stdout and stderr a message then exit
+##
+## Args: 
+##   1 - Message to print
+##   2 - Exit Code (Optional)
+###############################################################################
+function mErrorMessageAndExit() {
+  mMessage=$1 
+  mExitCode=$2
+  mErrorMessage "$mMessage ***"
+
+   if  [[ -z "$mExitCode" ]]; then
+     exit 1
+   fi
+}  
+
+
+###############################################################################
+## Function: mErrorMessageAndExit
+## Prints on stdout and stderr a message then exit
+##
+## Args: 
+##   1 - Message to print
+##   2 - Exit Code (Optional)
+###############################################################################
+function mCheckBinExists() {
+  BinThatSHouldExists=$1
+  which $BinThatSHouldExists > /dev/null
+  if [ $? -ne 0 ];
+  then
+    echo ""
+    mErrorMessage "$BinThatSHouldExists is mandatory" 2
+    echo ""
+    exit 1
+  fi
+}

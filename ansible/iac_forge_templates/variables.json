@@ -1,0 +1,58 @@
+{
+  "vcenter-server":"{{ CloudVMProvider.vsphere_host }}",
+  "vcenter-username":"{{ CloudVMProvider.vsphere_user }}",
+  "vcenter-password":"{{ CloudVMProvider.vsphere_password }}",
+  
+  "datacenter": "{{ CloudVMProvider.vsphere_datacenter }}",
+  "datastore":"{{ CloudVMProvider.vsphere_datastore }}",
+  "folder": "{{ CloudVMProvider.vsphere_template_folder }}",
+  "cluster": "{{ CloudVMProvider.vsphere_cluster }}",
+  "network": "{{ CloudVMProvider.vsphere_network }}",
+  "domain": "{{ CloudVMDefaultConfig.domain }}",
+
+  "ssh-username": "{{ CloudVMForge.linux.ssh_username }}",
+  "ssh-password": "{{ CloudVMForge.linux.ssh_password }}",
+  
+  "Debian-10_vm-name": "{{ CloudVMForge.debian10.template }}",
+  "Debian-10_iso-url": "{{ CloudVMForge.debian10.iso_url }}",
+  "Debian-10_iso-checksum": "{{ CloudVMForge.debian10.iso_checksum }}",
+  "Debian-10_iso-checksum-type": "{{ CloudVMForge.debian10.iso_checksum_type }}",
+
+  "Debian-11_vm-name": "{{ CloudVMForge.debian11.template }}",
+  "Debian-11_iso-url": "{{ CloudVMForge.debian11.iso_url }}",
+  "Debian-11_iso-checksum": "{{ CloudVMForge.debian11.iso_checksum }}",
+  "Debian-11_iso-checksum-type": "{{ CloudVMForge.debian11.iso_checksum_type }}",
+
+  "FR_WIN_ADMIN_USER": "{{ CloudVMForge.windows.FR.AdminUser }}",
+  "FR_WIN_ADMIN_GROUP": "{{ CloudVMForge.windows.FR.AdminGroup }}",
+  "WIN_CLOUDADMIN_USER": "{{ CloudVMForge.windows.CloudAdmin }}",
+  "EN_WIN_ADMIN_USER": "{{ CloudVMForge.windows.EN.AdminUser }}",
+  "EN_WIN_ADMIN_GROUP": "{{ CloudVMForge.windows.EN.AdminGroup }}",
+  
+  "Win1809-Windows-2019-LTS-FR__vm-name": "{{ CloudVMForge.Win1809_FR.template }}",
+  "Win1809-Windows-2019-LTS-FR__guest": "{{ CloudVMForge.windows.guest }}", 
+  "_comment": "On vcenter7 use  => windows2019srv_64Guest <=    on vcenter 6.7 use => windows9Server64Guest <=",
+  "Win1809-Windows-2019-LTS-FR__AdminUser": "{{ CloudVMForge.windows.FR.AdminUser }}",
+  "Win1809-Windows-2019-LTS-FR__AdminPass": "{{ CloudVMForge.windows.FR.AdminPassword }}",
+  "Win1809-Windows-2019-LTS-FR_os-iso-path": "{{ CloudVMForge.Win1809_FR.iso_path }}",
+   
+  "Win1809-IIS-FR__vm-name": "{{ CloudVMForge.Win1809_IIS_FR.template }}",
+  "Win1809-IIS-FR__guest": "{{ CloudVMForge.windows.guest }}", 
+  "Win1809-IIS-FR__AdminUser": "{{ CloudVMForge.windows.FR.AdminUser }}",
+  "Win1809-IIS-FR__AdminPass": "{{ CloudVMForge.windows.FR.AdminPassword }}",
+  "Win1809-IIS-FR_os-iso-path": "{{ CloudVMForge.Win1809_IIS_FR.iso_path }}",
+
+  "Win1809-SQL-Server-2019-FR__vm-name": "{{ CloudVMForge.Win1809_SQL2019_FR.template }}",
+  "Win1809-SQL-Server-2019-FR__guest": "{{ CloudVMForge.windows.guest }}", 
+  "Win1809-SQL-Server-2019-FR__AdminUser": "{{ CloudVMForge.windows.FR.AdminUser }}",
+  "Win1809-SQL-Server-2019-FR__AdminPass": "{{ CloudVMForge.windows.FR.AdminPassword }}",
+  "Win1809-SQL-Server-2019-FR-iso-path": "{{ CloudVMForge.Win1809_SQL2019_FR.iso_path }}",
+  
+  "Win1809-Windows-2019-LTS-EN__vm-name": "{{ CloudVMForge.Win1809_EN.template }}",
+  "Win1809-Windows-2019-LTS-EN__guest": "{{ CloudVMForge.windows.guest }}", 
+  "Win1809-Windows-2019-LTS-EN__AdminUser": "{{ CloudVMForge.windows.EN.AdminUser }}",
+  "Win1809-Windows-2019-LTS-EN__AdminPass": "{{ CloudVMForge.windows.EN.AdminPassword }}",
+  "Win1809-Windows-2019-LTS-EN_os-iso-path": "{{ CloudVMForge.Win1809_EN.iso_path }}",
+
+  "foo": ""
+}

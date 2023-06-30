@@ -1,0 +1,5 @@
+---
+- name: iac-env-manager
+  src: https://repo3.adlere.local/repository/adlere-ansible-release/iac-env-manager/iac-env-manager-v0.4.tgz
+- name: iac-env-manager
+  src: https://repo3.adlere.local/repository/adlere-ansible-release/iac-env-manager/iac-env-manager-v0.4.tgz

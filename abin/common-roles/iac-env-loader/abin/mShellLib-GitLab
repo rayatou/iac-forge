@@ -1,0 +1,77 @@
+#!/bin/bash
+######################################################
+
+
+###############################################################################
+## Function: mGitEnv
+## Sets Environement Variables for Docker
+##
+## Args: None
+###############################################################################
+function mGitEnv() {
+  if [ "x${IAC_GIT_USERNAME}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable IAC_GIT_USERNAME is not set"
+    exitOnError
+  fi  
+
+  if [ "x${IAC_GIT_EMAIL}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable IAC_GIT_EMAIL is not set"
+    exitOnError
+  fi  
+
+  if [ "x${IAC_GIT_TOKEN}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable IAC_GIT_TOKEN is not set"
+    exitOnError
+  fi  
+
+  if [ "x${IAC_GIT_MESSAGE}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable IAC_GIT_MESSAGE is not set"
+    exitOnError
+  fi  
+
+  if [ "x${IAC_GIT_BRANCH}x" == "xx" ]; then
+    INTERNAL_ERROR=101
+    INTERNAL_MSG="Variable IAC_GIT_BRANCH is not set"
+    exitOnError
+  fi  
+}
+
+
+###############################################################################
+## Function: mGitEnv
+## Sets Environement Variables for Docker
+##
+## Args: None
+###############################################################################
+function mGitEnvDebug() {
+  mInfoMessage  "*******************************************"
+  mInfoMessage  "** IAC_GIT_USERNAME:  $IAC_GIT_USERNAME"
+  mInfoMessage  "** IAC_GIT_EMAIL:     $IAC_GIT_EMAIL"
+  mInfoMessage  "** IAC_GIT_TOKEN:     $IAC_GIT_TOKEN"
+  mInfoMessage  "** IAC_GIT_MESSAGE:   $IAC_GIT_MESSAGE"
+  mInfoMessage  "** IAC_GIT_BRANCH:    $IAC_GIT_BRANCH"
+  mInfoMessage  "*******************************************"
+  mInfoMessage ""
+}
+
+function showGitlabCIJobNames {
+  mInfoMessage "Valid GitLab-CI Job Names are:"
+  cat .gitlab-ci.yml |\
+    grep -v '^ ' |\
+    grep -v '^---' |\
+    grep -v '^#' |\
+    grep -v 'image' |\
+    grep -v 'variables' |\
+    grep -v 'before_script' |\
+    grep -v 'stages' |\
+    grep -v 'services' |\
+    grep -v '^\t' |\
+    grep -v '^$' |\
+    sed 's/^/                    - /' |\
+    sort -u |\
+    sed 's/\:.*$//'
+}

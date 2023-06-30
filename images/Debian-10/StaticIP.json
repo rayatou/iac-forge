@@ -1,0 +1,7 @@
+"netcfg/disable_autoconfig=true ",
+"netcfg/use_autoconfig=false ",
+"netcfg/get_ipaddress=172.16.0.254 ",
+"netcfg/get_netmask=255.255.0.0 ",
+"netcfg/get_gateway=172.16.0.1 ",
+"netcfg/get_nameservers=172.16.0.1 ",
+"netcfg/confirm_static=true <wait>",          

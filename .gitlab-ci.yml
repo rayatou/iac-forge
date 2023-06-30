@@ -1,0 +1,120 @@
+stages:
+  - DEV
+  - REC
+  - INT
+  
+# rhel-8.2-DEV:
+#   stage: DEV
+#   variables:
+#     IAC_ENV: "DEV"
+#   script:
+#     - ./bin/build-rhel-8.2-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER
+
+# rhel-8.3-DEV:
+#   stage: DEV
+#   variables:
+#     IAC_ENV: "DEV"
+#   script:
+#     - ./bin/build-rhel-8.3-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER
+
+# rhel-8.6-DEV:
+#   stage: DEV
+#   variables:
+#     IAC_ENV: "DEV"
+#   script:
+#     - ./bin/build-rhel-8.6-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER
+
+# rhel-8.7-DEV:
+#   stage: DEV
+#   variables:
+#     IAC_ENV: "DEV"
+#   script:
+#     - ./bin/build-rhel-8.7-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER
+
+rhel-8.2-REC:
+  stage: REC
+  variables:
+    IAC_ENV: "REC"
+  before_script:
+    - export IAC_ENV=${IAC_ENV}
+  script:
+    - ./bin/build-rhel-8.2-rhsm
+  tags:
+    - cicd-rhel8-PACKER
+
+rhel-8.3-REC:
+  stage: REC
+  variables:
+    IAC_ENV: "REC"
+  before_script:
+    - export IAC_ENV=${IAC_ENV}
+  script:
+    - ./bin/build-rhel-8.3-rhsm
+  tags:
+    - cicd-rhel8-PACKER
+
+rhel-8.6-REC:
+  stage: REC
+  variables:
+    IAC_ENV: "REC"
+  before_script:
+    - export IAC_ENV=${IAC_ENV}
+  script:
+    - ./bin/build-rhel-8.6-rhsm
+  tags:
+    - cicd-rhel8-PACKER
+
+rhel-8.7-REC:
+  stage: REC
+  variables:
+    IAC_ENV: "REC"
+  before_script:
+    - export IAC_ENV=${IAC_ENV}
+  script:
+    - ./bin/build-rhel-8.7-rhsm
+  tags:
+    - cicd-rhel8-PACKER
+
+# rhel-8.2-INT:
+#   stage: INT
+#   variables:
+#     IAC_ENV: "INT"
+#   script:
+#     - ./bin/build-rhel-8.2-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER
+
+# rhel-8.3-INT:
+#   stage: INT
+#   variables:
+#     IAC_ENV: "INT"
+#   script:
+#     - ./bin/build-rhel-8.3-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER
+
+# rhel-8.6-INT:
+#   stage: INT
+#   variables:
+#     IAC_ENV: "INT"
+#   script:
+#     - ./bin/build-rhel-8.6-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER
+
+# rhel-8.7-INT:
+#   stage: INT
+#   variables:
+#     IAC_ENV: "INT"
+#   script:
+#     - ./bin/build-rhel-8.7-rhsm
+#   tags:
+#     - cicd-rhel8-PACKER

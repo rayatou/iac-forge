@@ -1,0 +1,88 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/mShellLib
+source $mIncDir/mShellLib-GitLab
+
+## If we fail once we kill the game
+set -e
+
+## Checks that Job Name was provided and assume that the first paramerter is the hobname
+if [[ $# != 1 ]]; then
+  showGitlabCIJobNames
+  mErrorMessage "Please Provide a valid GitLab-CI Job Name."
+  exit -1
+fi
+export mGitLabJobName=$1
+
+mDebugPrintEnvVars
+
+## Showing Command
+set -x
+gitlab-runner exec shell \
+      --env "TZ=Europe/Paris" \
+      --env "CI_ENV=GITLAB_CI_EXEC" \
+      --env "CI_TENANT=$CI_TENANT" \
+      --env "CI_PROJECT_NAME=$CI_PROJECT_NAME" \
+      --env "IAC_ENV=$IAC_ENV" \
+      --env "IAC_GIT_BRANCH=$IAC_GIT_BRANCH" \
+      --env "IAC_GIT_EMAIL=$IAC_GIT_EMAIL" \
+      --env "IAC_GIT_ENV_REPO=$IAC_GIT_ENV_REPO" \
+      --env "IAC_GIT_MESSAGE=$IAC_GIT_MESSAGE" \
+      --env "IAC_GIT_TOKEN=$IAC_GIT_TOKEN" \
+      --env "IAC_GIT_USERNAME=$IAC_GIT_USERNAME" \
+      --env "IAC_GIT_PROJECT7_VERSION=$IAC_GIT_PROJECT7_VERSION" \
+      --env "IAC_GIT_PROJECT7_REPO=$IAC_GIT_PROJECT7_REPO" \
+      --env "GIT_REPO_SHELL_CI_UTILS=$GIT_REPO_SHELL_CI_UTILS" \
+      --env "ANSIBLE_TENANT=$ANSIBLE_TENANT" \
+      --env "ANSIBLE_ROLE_NAME=$ROLE_NAME" \
+      --env "ANSIBLE_REPO=$ANSIBLE_REPO" \
+      --env "ANSIBLE_REPO_TYPE=$ANSIBLE_REPO_TYPE" \
+      --env "ANSIBLE_REPO_HOST=$ANSIBLE_REPO_HOST" \
+      --env "ANSIBLE_REPO_USER=$ANSIBLE_REPO_USER" \
+      --env "ANSIBLE_REPO_PASS=$ANSIBLE_REPO_PASS" \
+      --env "ANSIBLE_REPO_SNAPSHOT=$ANSIBLE_REPO_SNAPSHOT" \
+      --env "ANSIBLE_REPO_RELEASE=$ANSIBLE_REPO_RELEASE" \
+      --env "ANSIBLE_DOCKER_MOLECULE_IMAGE=$ANSIBLE_DOCKER_MOLECULE_IMAGE" \
+      --env "ANSIBLE_DOCKER_RELEASE_ROLE_IMAGE=$ANSIBLE_DOCKER_RELEASE_ROLE_IMAGE" \
+      --env "REPO_DOCKER_BUILDAH_IMAGE=$REPO_DOCKER_BUILDAH_IMAGE" \
+      --env "REPO_DOCKER_CA_ROOT_CRT_URL=$REPO_DOCKER_CA_ROOT_CRT_URL" \
+      --env "REPO_DOCKER_HOST=$REPO_DOCKER_HOST" \
+      --env "REPO_DOCKER_USER=$REPO_DOCKER_USER" \
+      --env "REPO_DOCKER_PASSWORD=$REPO_DOCKER_PASSWORD" \
+      --env "REPO_DOCKER_REGISTRY_RELEASE=$REPO_DOCKER_REGISTRY_RELEASE" \
+      --env "REPO_DOCKER_REGISTRY_SNAPSHOT=$REPO_DOCKER_REGISTRY_SNAPSHOT" \
+      --env "VSPHERE_HOST=$VSPHERE_HOST" \
+      --env "VSPHERE_USER=$VSPHERE_USER" \
+      --env "VSPHERE_PASSWORD=$VSPHERE_PASSWORD" \
+      --env "VSPHERE_FOLDER=$VSPHERE_FOLDER" \
+      --env "VSPHERE_CLUSTER=$VSPHERE_CLUSTER" \
+      --env "VSPHERE_RESOURCEPOOL=$VSPHERE_RESOURCEPOOL" \
+      --env "VSPHERE_DATASTORE=$VSPHERE_DATASTORE" \
+      --env "VSPHERE_NIC_DEFAULT_DOMAIN=$VSPHERE_NIC_DEFAULT_DOMAIN" \
+      --env "VSPHERE_NIC_DEFAULT_NETMASK=$VSPHERE_NIC_DEFAULT_NETMASK" \
+      --env "VSPHERE_NIC_DEFAULT_NETWORK=$VSPHERE_NIC_DEFAULT_NETWORK" \
+      --env "VSPHERE_NIC_DEFAULT_TYPE=$VSPHERE_NIC_DEFAULT_TYPE" \
+      --env "CA_ROOT_CRT_URL=${CA_ROOT_CRT_URL}" \
+      --env "RHN_USER=$RHN_USER" \
+      --env "RHN_PASS=$RHN_PASS" \
+      --env "RHN_TOKEN=$RHN_TOKEN" \
+      --env "RHN_POOL=$RHN_POOL" \
+      --env "SATELLITE_AKEY=$SATELLITE_AKEY" \
+      --env "SATELLITE_ORG=$SATELLITE_ORG" \
+      --env "SATELLITE_POOL=$SATELLITE_POOL" \
+      --env "SATELLITE_RPM=$SATELLITE_RPM" \
+      --env "SATELLITE_EPEL8_POOL=$SATELLITE_EPEL8_POOL" \
+      --env "SATELLITE_EPEL8=$SATELLITE_EPEL8" \
+  $mGitLabJobName

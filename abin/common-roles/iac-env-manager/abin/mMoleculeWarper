@@ -1,0 +1,52 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+mScript=`basename "$0"`
+mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/mShellLib
+
+function downloadAndTageImages() {
+  IMAGE_URL=$1
+  IMAGE_NAME=$2
+
+  docker pull ${IMAGE_URL}
+  docker image tag ${IMAGE_URL} ${IMAGE_NAME}
+}
+
+function downloadImagesLocally() {
+  downloadAndTageImages repo3.adlere.local:5000/adlere-releases/rhel/adlere-ubi8-init:v1.1 ubi8-init:M
+}
+
+function usage() {
+  echo "USAGE: $SCRIPT <molecule scenario name> <>"
+  echo ""
+}
+
+if [ $# -lt 1 ]
+then
+  usage
+  exit -1
+fi
+
+
+export MOLECULE_SCENARIO=$1 
+export MOLECULE_COMMAND="test"
+
+if [ $# -eq 2 ]
+then
+  export MOLECULE_COMMAND=$2
+fi
+
+#downloadImagesLocally
+
+echo "Lauching scenario: molecule $MOLECULE_COMMAND -s $MOLECULE_SCENARIO"
+molecule $MOLECULE_COMMAND -s $MOLECULE_SCENARIO

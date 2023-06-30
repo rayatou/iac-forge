@@ -1,0 +1,2 @@
+echo y | podman container prune 
+echo ""

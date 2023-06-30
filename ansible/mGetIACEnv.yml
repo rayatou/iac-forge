@@ -1,0 +1,21 @@
+---
+- name: "IAC Menu Builder | Building Tenant Directory"
+  ansible.builtin.file:
+    path: "{{ aMenuBuilder.iacEnvDir }}"
+    state: absent
+    mode: '0755'
+
+- name: "IAC Menu Builder | ENV | Cloning Repo"
+  ansible.builtin.git:
+    repo: "https://{{ aMenuBuilder.iacGitUsername }}:{{ aMenuBuilder.iacGitToken }}@{{ aMenuBuilder.iacGitEnvRepo }}"
+    dest: "{{ aMenuBuilder.iacEnvDir }}"
+
+- name: "IAC Menu Builder | ENV | Checking who is running locally"
+  shell: hostname ; whoami ;
+  register: foo
+
+- name: "IAC Menu Builder | ENV | Loading {{ aMenuBuilder.iacEnvDir }}/{{ aMenuBuilder.iacEnv }}.yml"
+  ansible.builtin.include_vars: "{{ aMenuBuilder.iacEnvDir }}/{{ aMenuBuilder.iacEnv }}.yml"
+
+#- name: "IAC Menu Builder | ENV | Loading {{ aMenuBuilder.iacEnvDir }}/{{ aMenuBuilder.iacEnv }}-Flavors.yml"
+#  ansible.builtin.include_vars: "{{ aMenuBuilder.iacEnvDir }}/{{ aMenuBuilder.iacEnv }}-Flavors.yml"

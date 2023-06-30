@@ -1,0 +1,4 @@
+#!/bin/bash
+
+{ sleep 1; echo ${VAULT_PASS}; } | script -q /dev/null -c 'vault login -method=ldap username=$VAULT_USER' &> /dev/null
+

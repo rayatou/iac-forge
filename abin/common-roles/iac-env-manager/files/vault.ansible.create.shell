@@ -1,0 +1,4 @@
+#!/bin/bash
+
+set -x
+ansible -m ansible.builtin.template -a 'src=./vault.sshkey.j2 dest={{ mPRIVATE_KEY }} mode=600' --extra-vars mPRIVATE_KEY=${mPRIVATE_KEY} --extra-vars @${mSECRET_FILE} --vault-password-file=${mSECRET_PASSWORD_FILE} --connection local -i 127.0.0.1, localhost

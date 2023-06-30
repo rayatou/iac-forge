@@ -1,0 +1,8 @@
+#!/bin/bash
+
+mScript=`basename "$0"`
+mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+set -e
+source $mIncDir/../abin/mShellLib
+
+docker-compose $1 $2 $3 $4 $5 $6 $7 $8 $9

@@ -1,0 +1,6 @@
+
+
+echo "##############################################################"
+echo "##############################################################"
+subscription-manager list --available | grep -A8 "Red Hat Enterprise Linux Server"
+

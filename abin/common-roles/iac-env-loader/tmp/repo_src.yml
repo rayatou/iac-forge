@@ -1,0 +1,8 @@
+---
+repos:
+  - name: "mj-jug"
+    url: "gitlab.adlere.fr/adlereps/clients/ministere-de-la-justice/alpha/mj-tenant-env.git"
+    dest: "~/.iac-mj-env"
+    cible: localhost
+    user: "qmontalan"
+    pass: "glpat-759askDj2yk6jAbenUaH"

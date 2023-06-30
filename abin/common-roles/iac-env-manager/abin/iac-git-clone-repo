@@ -1,0 +1,40 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/../abin/mShellLib
+
+if [ $# != 2 ]
+then
+  mErrorMessage "Please provide HTTPS Url of the given repo and the Tag"
+  exit -1
+fi
+
+mGitRepo=$1
+mGitTag=$2
+mGitRepoBaseName=$(basename $mGitRepo)
+mGitRepoFileName=${mGitRepoBaseName%.*}
+
+project_url=$(echo $1 | sed 's/https:\/\///')
+
+if [ $mGitTag == "latest" ]
+then
+  mInfoMessage "Clonning latest"
+  git clone --depth 1 https://${IAC_GIT_USERNAME}:${IAC_GIT_TOKEN}@$project_url
+else
+  mInfoMessage "Clonning version $mGitTag"
+  git clone --depth 1 --branch $2 https://${IAC_GIT_USERNAME}:${IAC_GIT_TOKEN}@$project_url
+fi
+
+cd $mGitRepoFileName
+rm -rf .git

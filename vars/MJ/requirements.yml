@@ -1,0 +1,7 @@
+---
+- name: iac-env-loader
+  src: https://repo3.adlere.local/repository/adlere-ansible-release/mj-alpha/iac-env-loader/iac-env-loader-v1.1.tgz
+- name: alpha-git_loader
+  src: https://repo3.adlere.local/repository/adlere-ansible-snapshot/mj-alpha/alpha-git_loader/alpha-git_loader-v1.1.tgz
+- name: iac-env-manager
+  src: https://repo3.adlere.local/repository/adlere-ansible-release/iac-env-manager/iac-env-manager-v0.4.tgz

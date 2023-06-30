@@ -1,0 +1,82 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+mScript=`basename "$0"`
+mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+set -e
+source $mIncDir/../abin/mShellLib
+
+export UUID=`date | md5sum | cut -d' ' -f1` 
+export TMP_DIR="/tmp/tmp-${mScript}-$UUID"
+export UNWANTED_FILES="molecule tests .gitignore .git cicd"
+
+set -e
+rm -rf "/tmp/tmp-${mScript}-*"
+
+function nexus3rawUpload {
+  repoupload="${ANSIBLE_REPO_SNAPSHOT} ${ANSIBLE_REPO_RELEASE}"
+  for definition in $repoupload
+  do
+    UPLOAD_CMD="curl -k -v -u ${ANSIBLE_REPO_USER}:${ANSIBLE_REPO_PASS} --upload-file ${ARTEFACT_NAME} ${ANSIBLE_REPO_HOST}/repository/${definition}/${ROLE_NAME}/${ARTEFACT_NAME}"
+    eval $UPLOAD_CMD 
+    INTERNAL_ERROR=$?
+  done
+}
+
+function sendArtefact {
+  if [ "x${ANSIBLE_REPO_TYPE}x" == "xNEXUS3x" ]; then
+    nexus3rawUpload
+  else
+    mErrorMessage "Unsupported ANSIBLE_REPO_TYPE: ${ANSIBLE_REPO_TYPE} " 1
+  fi
+}
+
+function sendTGZ {
+  export ARTEFACT_NAME="${ROLE_NAME}-${ROLE_VERSION}.tgz"
+  export COMPRESS_CMD="tar czvf"
+  
+  cd "$TMP_DIR"
+  ${COMPRESS_CMD} ${ARTEFACT_NAME} ${ROLE_NAME} 1> /dev/null 
+  sendArtefact
+}
+
+
+function sendZIP {
+  export ARTEFACT_NAME="${ROLE_NAME}-${ROLE_VERSION}.zip"
+  export COMPRESS_CMD="zip -r"
+
+  cd "$TMP_DIR"
+  ${COMPRESS_CMD} ${ARTEFACT_NAME} ${ROLE_NAME} 1> /dev/null 
+  sendArtefact
+}
+
+function createExportDir {
+  echo "*** Creating directory $TMP_DIR/${ROLE_NAME}"
+  mkdir -p "$TMP_DIR/${ROLE_NAME}"
+  echo "*** Copying files to $TMP_DIR/${ROLE_NAME}"
+  cp -r * "$TMP_DIR/${ROLE_NAME}"
+  echo "*** Removing files from $TMP_DIR/${ROLE_NAME}"
+  cd "$TMP_DIR/${ROLE_NAME}"
+  rm -rf $UNWANTED_FILES
+}
+
+function removeExportDir {
+  echo "*** Deleting directory $TMP_DIR"
+  rm -rf "$TMP_DIR"
+}
+
+mAnsibleSetEnv
+
+createExportDir
+sendTGZ
+sendZIP
+removeExportDir

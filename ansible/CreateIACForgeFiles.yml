@@ -1,0 +1,102 @@
+---
+- name: converge
+  hosts: localhost
+  become: false
+  vars:
+    interpreter_python: /usr/bin/python3
+    CloudEnvConfig:
+      iacEnv: "{{ lookup('ansible.builtin.env', 'IAC_ENV') }}"
+      iacEnvDir: "~/.iac-{{ Tenant|lower }}-env/"
+      iacMenu: "iac-menu.yml"
+      iacOutputDir: "terraform"
+      iacGitBranch: "{{ lookup('ansible.builtin.env', 'IAC_GIT_BRANCH') }}"
+      iacGitEnvRepo: "{{ lookup('ansible.builtin.env', 'IAC_GIT_ENV_REPO') }}"
+      iacGitEmail: "{{ lookup('ansible.builtin.env', 'IAC_GIT_EMAIL') }}"
+      iacGitMessage: "{{ lookup('ansible.builtin.env', 'IAC_GIT_MESSAGE') }}"
+      iacGitUsername: "{{ lookup('ansible.builtin.env', 'IAC_GIT_USERNAME') }}"
+      iacGitToken: "{{ lookup('ansible.builtin.env', 'IAC_GIT_TOKEN') }}"
+    Tenant: mj
+  tasks:
+    - name: "Include role and trigger task"
+      ansible.builtin.include_role:
+        name: ./abin/common-roles/iac-env-loader
+        tasks_from: main.yml
+      vars:
+        alpha_roles: abin/common-roles
+        Name: jug
+        tempdir: "../../tmp"
+        ENV: "{{ lookup('ansible.builtin.env', 'IAC_ENV') }}"
+
+    - name: "IAC Forge | GitEnv | Include vault.{{ CloudSecretProvider.type }}.load.yml"
+      include_role:
+        name: ./abin/common-roles/iac-env-manager
+        tasks_from: load.yml
+
+    - name: "IAC Forge | ENV"
+      debug:
+        var: CloudVMForge
+
+    - name: "IAC Forge | Building Tenant Directory"
+      file:
+        path: "../resources"
+        state: directory
+        mode: '0755'
+
+    - name: "IAC Forge | "
+      template:
+        src: "iac_forge_templates/{{ item }}"
+        dest: "../resources/{{ item }}"
+        mode: '0644'
+      with_items:
+        - "common.pkrvars.hcl"
+        - "definitions.pkr.hcl"
+        - "variables.json"
+        - "rhel-7.9.pkrvars.hcl"
+        - "rhel-8.2.pkrvars.hcl"
+        - "rhel-8.3.pkrvars.hcl"
+        - "rhel-8.6.pkrvars.hcl"
+        - "rhel-8.7.pkrvars.hcl"
+        - "rhel-9.1.pkrvars.hcl"
+        - "win-2019-lts-fr.pkrvars.hcl"
+        - "win-2019-iis-fr.pkrvars.hcl"
+
+    - name: "IAC Forge | Templating Windows Files"
+      template:
+        src: "iac_forge_templates/{{ item }}"
+        dest: "../images/WindowsScripts/{{ item }}"
+        mode: '0644'
+      with_items:
+        - "scVars.ps1"
+
+    - name: "IAC Forge | Templating Debian-11"
+      template:
+        src: "iac_forge_templates/debian11-preseed.cfg"
+        dest: "../images/Debian-11/http/preseed.cfg"
+        mode: '0644'
+
+    - name: "IAC Forge | Templating Debian-10"
+      template:
+        src: "iac_forge_templates/debian10-preseed.cfg"
+        dest: "../images/Debian-10/http/preseed.cfg"
+        mode: '0644'
+
+    - name: "IAC Forge | Templating RHEL 9 ks.cfg"
+      template:
+        src: "iac_forge_templates/rhel9-ks.cfg"
+        dest: "../images/RHEL-9-RHSM-EN/config/ks.cfg"
+        mode: '0644'
+
+
+    - name: "IAC Forge | Templating RHEL 8 ks.cfg"
+      template:
+        src: "iac_forge_templates/rhel8-ks.cfg"
+        dest: "../images/RHEL-8-RHSM-EN/config/ks.cfg"
+        mode: '0644'
+
+
+    - name: "IAC Forge | Templating RHEL 7 ks.cfg"
+      template:
+        src: "iac_forge_templates/rhel7-ks.cfg"
+        dest: "../images/RHEL-7-RHSM-EN/config/ks.cfg"
+        mode: '0644'
+

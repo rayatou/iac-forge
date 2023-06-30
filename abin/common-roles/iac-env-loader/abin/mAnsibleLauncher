@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/mShellLib
+
+source ${ABIN_PYTHON_DIR}/bin/activate
+
+eval "$ANSIBLE_CMD" $@

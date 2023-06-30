@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/../vars/${CI_TENANT}/vars.sh
+
+export PGDATABASE=$POSTGRESQL_DB
+export PGHOST=$POSTGRES_HOST
+export PGPORT=$POSTGRES_PORT
+export PGUSER=$POSTGRES_USER
+export PGPASSWORD=$POSTGRES_PASSWORD
+
+psql --quiet   --echo-hidden --field-separator-zero  --no-align --tuples-only     -c "SELECT 'svc-cloud-'|| nextval('machine_counter') || '-ratp';"

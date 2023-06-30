@@ -1,0 +1,13 @@
+#!/bin/bash
+SHELL_CI_UTIL=shell-ci-utils
+
+rm -rf ${SHELL_CI_UTIL}/.git 
+rm -rf abin
+
+mv ${SHELL_CI_UTIL}/abin .
+rm ${SHELL_CI_UTIL}/README.md
+
+mv shell-ci-utils/vars/ADLERE abin/TENANT.ExampleCopyItToVars
+
+rm -rf shell-ci-utils
+rm -f abin/install-shell-ci-utils

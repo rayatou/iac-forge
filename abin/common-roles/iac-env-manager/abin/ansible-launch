@@ -1,0 +1,29 @@
+
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2018 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/../abin/mShellLib
+source $mIncDir/../abin/mShellLib-GitLab
+
+export ANSIBLE_ROLES_PATH=$ANSIBLE_ROLES_PATH:libs
+export ANSIBLE_ROLES_PATH=$ANSIBLE_ROLES_PATH:${INCDIR}/abin/common-roles
+
+# WHen developping 
+export ANSIBLE_ROLES_PATH=$ANSIBLE_ROLES_PATH:..
+
+# WHen running inside a container
+export ANSIBLE_ROLES_PATH=$ANSIBLE_ROLES_PATH:/var/lib/cicd
+
+
+ansible-playbook --connection=local -i localhost, $1

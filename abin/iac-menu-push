@@ -1,0 +1,44 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/../abin/mShellLib
+source $mIncDir/../abin/mShellLib-GitLab
+
+export IAC_GIT_BRANCH=$1
+
+mGitEnv
+mGitEnvDebug
+
+# Go to the new directory
+cd "${CI_COMMIT_SHA}"
+
+git add .gitlab-ci.yml
+git add .gitignore
+git add *
+git status 
+
+# Check if we have modifications to commit
+CHANGES=$(git status --porcelain | wc -l)
+
+if [ "$CHANGES" -gt "0" ]; then
+  # Show the status of files that are about to be created, updated or deleted
+  git status
+
+  # Commit all changes
+  git commit -m "${IAC_GIT_MESSAGE}"
+
+  # Update the repository and make sure to skip the pipeline create for this commit
+  # git push origin -o ci.skip "${IAC_GIT_BRANCH}" 
+  git push origin "${IAC_GIT_BRANCH}" 
+fi

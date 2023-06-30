@@ -1,0 +1,8 @@
+---
+repos:
+  - name: "{{ Tenant }}-{{ Name }}"
+    url: "gitlab.adlere.fr/adlereps/clients/ministere-de-la-justice/alpha/{{ Tenant|lower }}-tenant-env.git"
+    dest: "~/.iac-{{ Tenant|lower }}-env"
+    cible: localhost
+    user: "{{ lookup('ansible.builtin.env', 'IAC_GIT_USERNAME') }}"
+    pass: "{{ lookup('ansible.builtin.env', 'IAC_GIT_TOKEN') }}"

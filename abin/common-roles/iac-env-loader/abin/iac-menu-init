@@ -1,0 +1,39 @@
+#!/bin/bash
+
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/../abin/mShellLib
+source $mIncDir/../abin/mShellLib-GitLab
+
+export IAC_GIT_BRANCH=$1
+
+git config --global user.email "${IAC_GIT_EMAIL}"
+git config --global user.name "${IAC_GIT_USERNAME}"
+
+mGitEnv
+mGitEnvDebug
+
+set +e
+set -x
+
+git branch -a
+git branch -a | grep "${IAC_GIT_BRANCH}"
+if [ $? != 0 ]; then
+  mInfoMessage "Create ${IAC_GIT_BRANCH}."
+  git clone "https://${IAC_GIT_USERNAME}:${IAC_GIT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" "${CI_COMMIT_SHA}"
+  if [ $? != 0 ]; then
+    exit -1
+  fi
+  cd ${CI_COMMIT_SHA}
+  git checkout -b $IAC_GIT_BRANCH
+  git add .gitlab-ci.yml
+  git add .gitignore
+  git add *
+  if [ $? != 0 ]; then
+    exit -1
+  fi
+else
+  mInfoMessage "Branch ${IAC_GIT_BRANCH} already exists "
+  mInfoMessage "Cloning to dir ${IAC_GIT_BRANCH} ${CI_COMMIT_SHA}"
+  git clone -b "$IAC_GIT_BRANCH" "https://${IAC_GIT_USERNAME}:${IAC_GIT_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" "${CI_COMMIT_SHA}" 
+fi

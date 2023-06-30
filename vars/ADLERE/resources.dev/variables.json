@@ -1,0 +1,58 @@
+{
+  "vcenter-server":"vcenter7.adlere.priv",
+  "vcenter-password":"{{env `VSPHERE_PASSWORD`}}",
+  "vcenter-username":"{{env `VSPHERE_USERNAME`}}",
+  
+  "datacenter": "DC-Adlere7",
+  "datastore":"vsanDatastore",
+  "folder": "Templates",
+  "cluster": "Adlere7",
+  "network": "dVLAN_PROTO_v9",
+  "domain": "adlere.local",
+
+  "ssh-username": "adlere",
+  "ssh-password": "Kernet10$",
+  
+  "Debian-10_vm-name": "AC-Debian-10-Template",
+  "Debian-10_iso-url": "https://cdimage.debian.org/debian-cd/10.10.0/amd64/iso-cd/debian-10.10.0-amd64-xfce-CD-1.iso",
+  "Debian-10_iso-checksum": "24fee00ed402c4a82cfec535870ab2359ec12a7dd4eed89c98fd582bc7cf3b25",
+  "Debian-10_iso-checksum-type": "sha256",
+
+  "Debian-11_vm-name": "AC-Debian-11-Template",
+  "Debian-11_iso-url": "https://cdimage.debian.org/debian-cd/11.1.0/amd64/iso-dvd/debian-11.1.0-amd64-DVD-1.iso",
+  "Debian-11_iso-checksum": "30f135e88d42cf0f4933fb3c02d293d27f23b13d2bda80d4b2bd2f69bd969d26",
+  "Debian-11_iso-checksum-type": "sha256",
+
+  "FR_WIN_ADMIN_USER": "Administrateur",
+  "FR_WIN_ADMIN_GROUP": "Administrateurs",
+  "WIN_CLOUDADMIN_USER": "CloudAdmin",
+  "EN_WIN_ADMIN_USER": "Administrator",
+  "EN_WIN_ADMIN_GROUP": "Administrators",
+  
+  "Win1809-Windows-2019-LTS-FR__vm-name": "AC-Win1809-Windows-2019-LTS-FR-Template",
+  "Win1809-Windows-2019-LTS-FR__guest": "windows2019srv_64Guest", 
+  "_comment": "On vcenter7 use  => windows2019srv_64Guest <=    on vcenter 6.7 use => windows9Server64Guest <=",
+  "Win1809-Windows-2019-LTS-FR__AdminUser": "Administrateur",
+  "Win1809-Windows-2019-LTS-FR__AdminPass": "Kernet10$",
+  "Win1809-Windows-2019-LTS-FR_os-iso-path": "[NAS4-Admin] _OS/Microsoft - Windows 2019 LTS/SW_DVD9_Win_Server_STD_CORE_1809_FR.ISO",
+   
+  "Win1809-IIS-FR__vm-name": "AC-Win1809-IIS-FR-Template",
+  "Win1809-IIS-FR__guest": "windows2019srv_64Guest", 
+  "Win1809-IIS-FR__AdminUser": "Administrateur",
+  "Win1809-IIS-FR__AdminPass": "Kernet10$",
+  "Win1809-IIS-FR_os-iso-path": "[NAS4-Admin] _OS/Microsoft - Windows 2019 LTS/SW_DVD9_Win_Server_STD_CORE_1809_FR.ISO",
+
+  "Win1809-SQL-Server-2019-FR__vm-name": "AC-Win1809-SQL-Server-2019-FR-Template-9",
+  "Win1809-SQL-Server-2019-FR__guest": "windows2019srv_64Guest", 
+  "Win1809-SQL-Server-2019-FR__AdminUser": "Administrateur",
+  "Win1809-SQL-Server-2019-FR__AdminPass": "Kernet10$",
+  "Win1809-SQL-Server-2019-FR-iso-path": "[NAS3_AdminShare-2] PRODUCTS/SW_DVD9_NTRL_SQL_Svr_Standard_Edtn_2019Dec2019_64Bit_French_OEM_VL_X22-22112.ISO",
+  
+  "Win1809-Windows-2019-LTS-EN__vm-name": "AC-Win1809-Windows-2019-LTS-EN-Template",
+  "Win1809-Windows-2019-LTS-EN__guest": "windows2019srv_64Guest", 
+  "Win1809-Windows-2019-LTS-EN__AdminUser": "Administrator",
+  "Win1809-Windows-2019-LTS-EN__AdminPass": "Kernet10$",
+  "Win1809-Windows-2019-LTS-EN_os-iso-path": "[NAS4-Admin] _OS/Microsoft - Windows 2019 LTS/SW_DVD9_Win_Server_STD_CORE_1809_EN.ISO",
+
+  "foo": ""
+}

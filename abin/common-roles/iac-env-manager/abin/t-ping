@@ -1,0 +1,19 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+export INCDIR=$(dirname "$0")
+source "$INCDIR/../bin/__config__"
+source "${INCDIR}/../abin/__ShellLibrary__"
+
+set -x
+eval "$ANSIBLE_CMD"  "$INCDIR/ansible-lib/ping.yml" $@
+

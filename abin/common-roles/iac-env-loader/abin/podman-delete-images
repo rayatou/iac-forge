@@ -1,0 +1,1 @@
+podman images  | awk '{ print $3 }' | xargs podman image rm -f

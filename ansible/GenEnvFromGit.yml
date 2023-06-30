@@ -1,0 +1,25 @@
+---
+- name: converge
+  hosts: localhost
+  become: false
+  vars:
+    interpreter_python: /usr/bin/python3
+  tasks:
+    - name: "Include role and trigger task"
+      ansible.builtin.include_role:
+        name: ./abin/common-roles/iac-env-loader
+        tasks_from: main.yml
+      vars:
+        CloudEnvConfig:
+          iacEnv: "{{ lookup('ansible.builtin.env', 'IAC_ENV') }}"
+          iacGitBranch: "{{ lookup('ansible.builtin.env', 'IAC_GIT_BRANCH') }}"
+          iacGitEnvRepo: "{{ lookup('ansible.builtin.env', 'IAC_GIT_ENV_REPO') }}"
+          iacGitEmail: "{{ lookup('ansible.builtin.env', 'IAC_GIT_EMAIL') }}"
+          iacGitMessage: "{{ lookup('ansible.builtin.env', 'IAC_GIT_MESSAGE') }}"
+          iacGitUsername: "{{ lookup('ansible.builtin.env', 'IAC_GIT_USERNAME') }}"
+          iacGitToken: "{{ lookup('ansible.builtin.env', 'IAC_GIT_TOKEN') }}"
+        alpha_roles: abin/common-roles
+        Tenant: mj
+        Name: jug
+        tempdir: "../../tmp"
+        ENV: "{{ lookup('ansible.builtin.env', 'IAC_ENV') }}"

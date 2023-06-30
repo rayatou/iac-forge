@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: GLUSTER | Starting Glusterd
+      shell: firewall-cmd --get-active-zones
+      register: out
+      ignore_errors: true
+
+    - debug: var=out.stdout_lines
+      when: not out.stdout == ""

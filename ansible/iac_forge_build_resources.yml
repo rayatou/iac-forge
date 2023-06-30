@@ -1,0 +1,106 @@
+---
+- name: "Include role and trigger task"
+  ansible.builtin.include_tasks: mGetIACEnv.yml
+
+- name: "IAC Menu Builder | ENV"
+  debug:
+    var: CloudVMProvider
+
+- name: "IAC Menu Builder | ENV"
+  debug:
+    var: CloudVMForge
+
+- name: "IAC Menu Builder | Building Tenant Directory"
+  ansible.builtin.file:
+    path: "../resources"
+    state: directory
+    mode: '0755'
+
+- name: "IAC Menu Builder | "
+  ansible.builtin.template:
+    src: "iac_forge_templates/{{ item }}"
+    dest: "../resources/{{ item }}"
+    mode: '0644'
+  with_items:
+    - "common.pkrvars.hcl"
+    - "definitions.pkr.hcl"
+    - "variables.json"
+    - "rhel-7.9.pkrvars.hcl"
+    - "rhel-8.2.pkrvars.hcl"
+    - "rhel-8.3.pkrvars.hcl"
+    - "rhel-8.6.pkrvars.hcl"
+    - "win-2019-lts-fr.pkrvars.hcl"
+    - "win-2019-iis-fr.pkrvars.hcl"
+
+- name: "IAC Menu Builder | Templating Windows Files"
+  ansible.builtin.template:
+    src: "iac_forge_templates/{{ item }}"
+    dest: "../images/WindowsScripts/{{ item }}"
+    mode: '0644'
+  with_items:
+    - "scVars.ps1"
+
+- name: "IAC Menu Builder | Templating Debian-11"
+  ansible.builtin.template:
+    src: "iac_forge_templates/debian11-preseed.cfg"
+    dest: "../images/Debian-11/http/preseed.cfg"
+    mode: '0644'
+
+- name: "IAC Menu Builder | Templating Debian-10"
+  ansible.builtin.template:
+    src: "iac_forge_templates/debian10-preseed.cfg"
+    dest: "../images/Debian-10/http/preseed.cfg"
+    mode: '0644'
+---
+- name: "Include role and trigger task"
+  ansible.builtin.include_tasks: mGetIACEnv.yml
+
+- name: "IAC Menu Builder | ENV"
+  debug:
+    var: CloudVMProvider
+
+- name: "IAC Menu Builder | ENV"
+  debug:
+    var: CloudVMForge
+
+- name: "IAC Menu Builder | Building Tenant Directory"
+  ansible.builtin.file:
+    path: "../resources"
+    state: directory
+    mode: '0755'
+
+- name: "IAC Menu Builder | "
+  ansible.builtin.template:
+    src: "iac_forge_templates/{{ item }}"
+    dest: "../resources/{{ item }}"
+    mode: '0644'
+  with_items:
+    - "common.pkrvars.hcl"
+    - "definitions.pkr.hcl"
+    - "variables.json"
+    - "rhel-7.9.pkrvars.hcl"
+    - "rhel-8.2.pkrvars.hcl"
+    - "rhel-8.3.pkrvars.hcl"
+    - "rhel-8.6.pkrvars.hcl"
+    - "win-2019-lts-fr.pkrvars.hcl"
+    - "win-2019-iis-fr.pkrvars.hcl"
+
+- name: "IAC Menu Builder | Templating Windows Files"
+  ansible.builtin.template:
+    src: "iac_forge_templates/{{ item }}"
+    dest: "../images/WindowsScripts/{{ item }}"
+    mode: '0644'
+  with_items:
+    - "scVars.ps1"
+
+- name: "IAC Menu Builder | Templating Debian-11"
+  ansible.builtin.template:
+    src: "iac_forge_templates/debian11-preseed.cfg"
+    dest: "../images/Debian-11/http/preseed.cfg"
+    mode: '0644'
+
+- name: "IAC Menu Builder | Templating Debian-10"
+  ansible.builtin.template:
+    src: "iac_forge_templates/debian10-preseed.cfg"
+    dest: "../images/Debian-10/http/preseed.cfg"
+    mode: '0644'

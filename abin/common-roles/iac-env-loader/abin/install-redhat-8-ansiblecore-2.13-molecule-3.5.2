@@ -1,0 +1,16 @@
+#!/bin/bash
+
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/mShellLib
+
+
+/usr/bin/python3.9 -m venv ${ABIN_PYTHON_DIR}
+source ${ABIN_PYTHON_DIR}/bin/activate
+pip3 install --upgrade pip 
+pip3 install --upgrade requests
+# Installation for compatibility issues
+pip3 install rich==9.5.1 urllib3==1.25.11 cryptography==2.5 chardet==4
+pip3 install wheel ansible-core==2.13.0  testinfra==3.4.0 molecule==3.5.2 docker python-vagrant selinux
+pip3 install molecule-vmware molecule-docker==1.1.0 molecule-podman==1.1.0 pyvmomi hvac
+ansible-galaxy collection install community.vmware

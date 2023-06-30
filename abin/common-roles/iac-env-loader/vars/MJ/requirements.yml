@@ -1,0 +1,3 @@
+---
+- name: alpha-git_loader
+  src: https://repo3.adlere.local/repository/adlere-ansible-snapshot/mj-alpha/alpha-git_loader/alpha-git_loader-v1.1.tgz

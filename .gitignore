@@ -1,0 +1,10 @@
+.vscode
+.DS_Store
+.DS_Store?
+.Trashes
+resources/**
+Thumbs.db
+.idea
+packer_cache/**
+tmp/**
+builds/**

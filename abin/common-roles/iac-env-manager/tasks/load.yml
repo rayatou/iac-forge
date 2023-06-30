@@ -1,0 +1,3 @@
+---
+- name: "CloudEngine | Cloud | GitEnv | Include vault.{{ CloudSecretProvider.type }}.load.yml"
+  ansible.builtin.include_tasks: "vault.{{ CloudSecretProvider.type }}.load.yml"

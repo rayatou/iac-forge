@@ -1,0 +1,13 @@
+---
+- name: "iac-env-loader | Init | Create temp folder"
+  ansible.builtin.file:
+    name: "{{ tempdir }}"
+    state: directory
+
+- name: "iac-env-loader | Init | Creating Loader File"
+  ansible.builtin.template:
+    src: "repo_src"
+    dest: "{{ tempdir }}/repo_src.yml"
+
+- name: "iac-env-loader | Init | Including Loader File"
+  ansible.builtin.include_vars: "{{ tempdir }}/repo_src.yml"

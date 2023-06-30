@@ -1,0 +1,45 @@
+---
+- name: "iac-env-loader | Init"
+  delegate_to: localhost
+  block:
+    - name: "iac-env-loader | Init | Call task"
+      ansible.builtin.include_tasks: init.yml
+
+    - name: "iac-env-loader | Loading | Tenant Env"
+      vars:
+        git_method: http
+      ansible.builtin.include_role:
+        name: "{{ alpha_roles }}/alpha-git_loader"
+      loop: "{{ repos }}"
+
+    - name: "iac-env-loader | Including ENV : {{ mENV }} for Tenant : {{ Tenant }}"
+      ansible.builtin.include_vars: "{{ repos.0.dest }}/{{ item }}.yml"
+      with_items:
+        - "{{ ENV }}"
+        - "{{ ENV }}.secret"
+
+    - name: "iac-env-loader | Get {{ item.dir }} Vars"
+      ansible.builtin.include_vars: "{{ repos.0.dest }}/{{ item.dir }}/{{ item.file }}.yml"
+      with_items:
+        - {dir: "Certificate", file: "{{ CloudCert }}"}
+        - {dir: "Vault", file: "{{ CloudVAULTProvider }}"}
+        - {dir: "vSphere", file: "{{ CloudVMProvider }}"}
+        - {dir: "IPAM", file: "{{ CloudIPAMProvider }}"}
+        - {dir: "Default", file: "{{ CloudVMDefaultConfig }}"}
+        - {dir: "RHEL", file: "{{ aRedHatRegister }}"}
+        - {dir: "Windows", file: "{{ WindowsEnv }}"}
+        - {dir: "Windows", file: "{{ SQLServerEnv }}"}
+        - {dir: "Secret", file: "{{ CloudSecretProvider }}"}
+        - {dir: "User", file: "{{ CloudUsers }}"}
+
+    - name: "iac-env-loader | Get Virtual Machine Vars"
+      ansible.builtin.include_vars: "{{ repos.0.dest }}/vSphere/{{ item }}.yml"
+      with_items:
+        - "{{ VMImages }}"
+        - "{{ VMStorage }}"
+        - "{{ VMNet }}"
+        - "{{ VMFlavors }}"
+
+    - name: "iac-env-loader | Get Forge Vars"
+      ansible.builtin.include_vars: "{{ repos.0.dest }}/Forge/{{ CloudVMForge }}.yml"
+  # when: load == "environment"

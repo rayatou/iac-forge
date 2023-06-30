@@ -1,0 +1,23 @@
+---
+- name: "IaC-Env-Manager | GitEnv | create | Building Tenant Directory {{ CloudEnvConfig.iacEnvDir }}"
+  ansible.builtin.file:
+    path: "{{ CloudEnvConfig.iacEnvDir }}"
+    state: absent
+    mode: '0755'
+  become: false
+  delegate_to: localhost
+
+- name: "IaC-Env-Manager | GitEnv | create | Cloning Repo https://{{ CloudEnvConfig.iacGitUsername }}:XXXXXXXX@{{ CloudEnvConfig.iacGitEnvRepo }} to {{ CloudEnvConfig.iacEnvDir }}"
+  ansible.builtin.git:
+    repo: "https://{{ CloudEnvConfig.iacGitUsername }}:{{ CloudEnvConfig.iacGitToken }}@{{ CloudEnvConfig.iacGitEnvRepo }}"
+    dest: "{{ CloudEnvConfig.iacEnvDir }}"
+  become: false
+  delegate_to: localhost
+
+- name: "IaC-Env-Manager | GitEnv | create | Include Secret Configuration {{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.secret.yml"
+  ansible.builtin.include_vars: "{{ CloudEnvConfig.iacEnvDir }}/{{ CloudEnvConfig.iacEnv }}.secret.yml"
+  become: false
+  delegate_to: localhost
+
+- name: "IaC-Env-Manager | GitEnv | create | Include vault.{{ CloudSecretProvider.type }}.create.yml"
+  ansible.builtin.include_tasks: "vault.{{ CloudSecretProvider.type }}.create.yml"

@@ -1,0 +1,85 @@
+#!/bin/bash
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+mScript=`basename "$0"`
+mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+set -e
+source $mIncDir/../abin/mShellLib
+mDockerSetEnv
+
+echo ""
+echo "***********************************************"
+echo "***********************************************"
+echo "** IMAGE_NAME:         $IMAGE_NAME "
+echo "** IMAGE_VERSION:      $IMAGE_VERSION "
+echo "** IMAGE_TAG:          $IMAGE_TAG "
+echo "** IMAGE_BUILD_ARGS:   $IMAGE_BUILD_ARGS"
+echo "** IMAGE_DOCKERFILE:   $IMAGE_DOCKERFILE "
+echo "***********************************************"
+echo "***********************************************"
+echo ""
+set -x
+buildah build \
+    --build-arg IMAGE_NAME="${IMAGE_NAME}" \
+    --label    "IMAGE_NAME=${IMAGE_NAME}" \
+    --build-arg IMAGE_VERSION="${IMAGE_VERSION}" \
+    --label    "IMAGE_VERSION=${IMAGE_VERSION}" \
+    --label    "IMAGE_TAG=${IMAGE_TAG}" \
+    --label    "IMAGE_DOCKERFILE=${IMAGE_DOCKERFILE}" \
+    ${IMAGE_BUILD_ARGS} \
+    -f "${IMAGE_DOCKERFILE}" \
+    -t "$IMAGE_NAME:$IMAGE_VERSION" .
+set +x
+echo "***********************************************"
+echo ""
+echo ""
+
+echo "***********************************************"
+echo "** IMAGE_NAME:         $IMAGE_NAME "
+echo "** IMAGE_VERSION:      $IMAGE_VERSION "
+echo "** IMAGE_TAG:          $IMAGE_TAG "
+echo "** Tagging: $IMAGE_NAME:$IMAGE_VERSION $IMAGE_TAG"
+echo "***********************************************"
+set -x
+buildah tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_TAG
+set +x
+echo "***********************************************"
+echo ""
+echo ""
+
+echo "***********************************************"
+echo "** REPO_DOCKER_HOST:     $REPO_DOCKER_HOST "
+echo "** REPO_DOCKER_USER:     $REPO_DOCKER_USER "
+echo "** REPO_DOCKER_PASSWORD: $REPO_DOCKER_PASSWORD "
+echo "***********************************************"
+set -x
+buildah login --username $REPO_DOCKER_USER --password $REPO_DOCKER_PASSWORD $REPO_DOCKER_HOST
+set +x
+echo "***********************************************"
+echo ""
+echo ""
+
+echo "***********************************************"
+echo "** IMAGE_TAG:  $IMAGE_TAG " 
+echo "** Pushing Image"
+echo "***********************************************"
+set -x
+buildah push $IMAGE_TAG
+set +x
+set +x
+echo "***********************************************"
+echo ""
+echo ""
+
+rm -f $UUID
+
+mDebugPrintEnvDocker

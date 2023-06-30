@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/mShellLib
+
+python3 -m venv ${ABIN_PYTHON_DIR}
+source ${ABIN_PYTHON_DIR}/bin/activate
+pip3 install --upgrade pip 
+pip3 install --upgrade requests
+# Installation for compatibility issues
+pip3 install rich==9.5.1 urllib3==1.25.11 cryptography==2.5 chardet==4 
+pip3 install wheel ansible==2.9.27  testinfra==3.4.0 molecule==2.22 docker python-vagrant selinux

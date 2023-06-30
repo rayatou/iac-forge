@@ -1,0 +1,18 @@
+#!/bin/bash
+
+export mScript=`basename "$0"`
+export mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $mIncDir/mShellLib
+
+
+source /etc/os-release
+export OS_MAJOR_VERSION=`echo $VERSION_ID | cut -d\. -f1`
+if [ "X${ID}X" = "XrhelX" ]; then
+  export OS_FAMILY="redhat"
+elif [ "X${ID}X" = "XcentosX" ]; then
+  export OS_FAMILY="redhat"
+else
+  export OS_FAMILY="debian"
+fi
+
+$mIncDir/install-${OS_FAMILY}-${OS_MAJOR_VERSION}-ansible-${ABIN_ANSIBLE_VERSION}-molecule-${ABIN_MOLECULE_VERSION}

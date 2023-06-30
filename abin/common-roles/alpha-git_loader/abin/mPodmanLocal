@@ -1,0 +1,22 @@
+#!/bin/bash
+
+mScript=`basename "$0"`
+mIncDir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+set -e
+source $mIncDir/../abin/mShellLib
+
+mDockerSetEnv
+
+
+podman run --rm \
+    -v /tmp:/tmp \
+    -v /cache \
+    -v /rpoc \
+    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    -v .:/var/lib/cicd/workdir:Z \
+    --security-opt label=disable \
+    $REPO_DOCKER_BUILDAH_IMAGE \
+    sh -c "cd /var/lib/cicd/workdir ; source ./$UUID ;  /var/lib/cicd/bin/buildah-build"
+
+rm -f $UUID
+

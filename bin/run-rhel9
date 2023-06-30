@@ -1,0 +1,6 @@
+mkdir -p tmp
+rm -rf tmp/RHEL-9-RHSM-EN.$1
+cp -r images/RHEL-9-RHSM-EN/ tmp/RHEL-9-RHSM-EN.$1
+cp resources/definitions.pkr.hcl tmp/RHEL-9-RHSM-EN.$1
+cd tmp/RHEL-9-RHSM-EN.$1 &&  packer-1.7 init . && packer-1.7 build -force -var-file="../../resources/rhel-$1.pkrvars.hcl" -var-file="../../resources/common.pkrvars.hcl" --var-file="./variables.auto.pkrvars.hcl" . && echo ""
+rm -rf tmp/RHEL-9-RHSM-EN.$1

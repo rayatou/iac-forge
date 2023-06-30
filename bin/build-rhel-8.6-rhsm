@@ -1,0 +1,7 @@
+#!/bin/bash
+export mScript=`basename "$0"`
+export mIncDir=`dirname $0`
+cd $mIncDir/..
+
+make CreateIACForgeFiles
+make RHEL-8.6-RHSM-EN

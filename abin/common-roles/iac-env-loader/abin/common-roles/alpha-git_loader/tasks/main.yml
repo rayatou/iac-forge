@@ -1,0 +1,4 @@
+---
+- name: "Git_loader | Init"
+  ansible.builtin.include_tasks: load-repo.yml
+  no_log: true

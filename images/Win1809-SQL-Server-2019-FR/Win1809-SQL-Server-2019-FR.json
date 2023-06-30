@@ -1,0 +1,74 @@
+{
+  "sensitive-variables": ["vsphere_password", "winadmin_password"],
+  
+  "builders": [
+    {
+      "type": "vsphere-iso",
+      "communicator": "winrm",
+      "ip_wait_timeout": "1h",
+
+      "vcenter_server": "{{user `vcenter-server`}}",
+      "username": "{{user `vcenter-username`}}",
+      "password": "{{user `vcenter-password`}}",
+      "insecure_connection": "true",
+
+      "datacenter": "{{user `datacenter`}}",
+      "cluster": "{{user `cluster`}}",
+      "network": "{{user `network`}}",
+      "datastore": "{{user `datastore`}}",
+      "folder": "{{user `folder`}}",
+
+      "winrm_username": "{{user `Win1809-SQL-Server-2019-FR__AdminUser`}}",
+      "winrm_password": "{{user `Win1809-SQL-Server-2019-FR__AdminPass`}}",
+
+      "convert_to_template": "true",
+
+      "vm_name": "{{user `Win1809-SQL-Server-2019-FR__vm-name`}}",
+      "guest_os_type": "{{user `Win1809-SQL-Server-2019-FR__guest`}}",
+
+      "CPUs": "8",
+      "RAM": "8192",
+      "RAM_reserve_all": true,
+      "firmware": "bios",
+
+      "disk_controller_type": "lsilogic-sas",
+      "disk_size": "40960",
+      "disk_thin_provisioned": true,
+
+      "network_card": "vmxnet3",
+
+      "iso_paths": [
+        "{{user `Win1809-Windows-2019-LTS-FR_os-iso-path`}}",
+        "[] /vmimages/tools-isoimages/windows.iso",
+        "{{user `Win1809-SQL-Server-2019-FR-iso-path`}}"      
+      ],
+      "floppy_files": [
+          "./images/Win1809-SQL-Server-2019-FR/Files/*",
+          "./images/WindowsScripts/*"
+      ]
+    }
+  ],
+  
+
+  "provisioners": [
+    {
+      "type": "windows-shell",
+      "inline": ["ipconfig"]
+    },
+		{
+			"type": "powershell",
+			"environment_vars": [
+        "SHELL_DIR=A:\\",
+				"AdminUser={{user `FR_WIN_ADMIN_USER`}}",
+				"AdminGroup={{user `FR_WIN_ADMIN_GROUP`}}",
+				"CloudAdmin={{user `WIN_CLOUDADMIN_USER`}}"
+			],
+			"scripts": [
+				"./images/WindowsScripts/10_CloudInit-Install.ps1",
+				"./images/WindowsScripts/11_CopyLocal-Scripts.ps1",
+				"./images/WindowsScripts/12_WindowsUpdate.ps1",
+				"./images/WindowsScripts/19_SQLServer2019-CopyDVD-To-C.ps1"
+			]
+		}
+  ] 
+}

@@ -1,0 +1,25 @@
+---
+- name: converge
+  hosts: localhost
+  become: false
+  vars:
+    interpreter_python: /usr/bin/python3
+  tasks:
+    - name: "Include role and trigger task"
+      ansible.builtin.include_tasks: iac_forge_build_resources.yml
+      vars:
+        aMenuBuilder:
+          iacEnv: "{{ lookup('ansible.builtin.env', 'IAC_ENV') }}"
+          iacEnvDir: "~/.iac-env"
+          iacMenu: "iac-menu.yml"
+          iacOutputDir: "terraform"
+          iacGitBranch: "{{ lookup('ansible.builtin.env', 'IAC_GIT_BRANCH') }}"
+          iacGitEnvRepo: "{{ lookup('ansible.builtin.env', 'IAC_GIT_ENV_REPO') }}"
+          iacGitEmail: "{{ lookup('ansible.builtin.env', 'IAC_GIT_EMAIL') }}"
+          iacGitMessage: "{{ lookup('ansible.builtin.env', 'IAC_GIT_MESSAGE') }}"
+          iacGitUsername: "{{ lookup('ansible.builtin.env', 'IAC_GIT_USERNAME') }}"
+          iacGitToken: "{{ lookup('ansible.builtin.env', 'IAC_GIT_TOKEN') }}"
+          # Déplacer ce set vars
+        windows_admin_password: "{{ lookup('ansible.builtin.env', 'WINDOWS_ADMIN_PASS') }}"
+        linux_ssh_password: "{{ lookup('ansible.builtin.env', 'LINUX_SSH_PASS') }}"
+        linux_ssh_private_key: "{{ CloudVMDefaultConfig.ansible_sshkey }}"

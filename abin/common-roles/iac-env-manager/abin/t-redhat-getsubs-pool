@@ -1,0 +1,26 @@
+####################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2018 Adlere ALL RIGHTS RESERVED
+##
+####################################################
+
+echo "##############################################################"
+echo "##############################################################"
+subscription-manager list --available | grep -A8 "Red Hat Enterprise Linux Server"
+
+echo ""
+echo ""
+echo "##############################################################"
+echo "##############################################################"
+echo " Storage Pool IDs"
+echo "##############################################################"
+echo "##############################################################"
+echo ""
+subscription-manager list --available | grep -A8 "Red Hat Storage"
+

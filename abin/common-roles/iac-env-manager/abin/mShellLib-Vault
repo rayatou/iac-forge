@@ -1,0 +1,121 @@
+#!/bin/bash
+###############################################################################
+## 
+## These tools are the property of Adlere
+## usage is restricted to the final customer only.
+##
+## Distribution for Consulting purposes is prohibited
+## without authorization.
+##
+## © 2022 Adlere ALL RIGHTS RESERVED
+##
+###############################################################################
+source $mIncDir/mShellLib-Core
+
+
+###############################################################################
+## Function: mErrorMessage
+## Prints on stdout and stderr a message then exit
+##
+## Args: 
+##   1 - Message to print
+##   2 - Exit Code (Optional)
+###############################################################################
+function mErrorMessage() {
+  mMessage=$1 
+  echo "  [ERROR][$mScript] *** $mMessage ***"  1>&2
+} 
+
+###############################################################################
+## Function: mErrorMessageAndExit
+## Prints on stdout and stderr a message then exit
+##
+## Args: 
+##   1 - Message to print
+##   2 - Exit Code (Optional)
+###############################################################################
+function mErrorMessageAndExit() {
+  mMessage=$1 
+  mExitCode=$2
+  mErrorMessage "$mMessage ***"
+
+   if  [[ -z "$mExitCode" ]]; then
+     exit 1
+   fi
+}  
+
+###############################################################################
+## Function: mDebugPrintEnvVault
+## Parses Environement Variables for Vault
+##
+## Args: None
+###############################################################################
+function mDebugPrintEnvVault() {
+ echo "***********************************************"
+  echo "** CI_TENANT:         $CI_TENANT"
+  echo "** CI_PROJECT_NAME:   $CI_PROJECT_NAME"
+  echo "** CI_ENV:            $CI_ENV"
+  echo "** VAULT_ENV_TYPE:        $VAULT_ENV_TYPE"
+  echo "** VAULT_ENV_PASSFILE:    $VAULT_ENV_PASSFILE"
+  echo "** VAULT_ENV_FILE:        $VAULT_ENV_FILE"
+  echo "** VAULT_ENV_PASSWORD:    $VAULT_ENV_PASSWORD"
+  echo "***********************************************"
+}
+
+###############################################################################
+## Function: mDebugPrintEnvVault
+## Parses Environement Variables for Vault
+##
+## Args: None
+###############################################################################
+function mDebugPrintCISecrets() {
+  echo "***********************************************"
+  echo "** ANSIBLE_REPO_PASS:     $ANSIBLE_REPO_PASS"
+  echo "** IAC_GIT_TOKEN:         $IAC_GIT_TOKEN"
+  echo "** IPAM_PASSWORD:         $IPAM_PASSWORD"
+  echo "** RHN_PASS:              $RHN_PASS"
+  echo "** RHN_TOKEN:             $RHN_TOKEN"
+  echo "** REPO_DOCKER_PASSWORD:  $REPO_DOCKER_PASSWORD"
+  echo "***********************************************"
+}
+  
+
+###############################################################################
+## Function: mDockerSetEnv
+## Sets Environement Variables for Docker
+##
+## Args: None
+###############################################################################
+function mAnsibleSetEnv() {
+
+  if [ "x${VAULT_ENV_TYPE}x" == "xx" ]; then
+    mErrorMessageAndExit "Variable VAULT_ENV_TYPE is not set" 101
+  fi  
+
+  if [ "x${VAULT_ENV_FILE}x" == "xx" ]; then
+    mErrorMessageAndExit "Variable VAULT_ENV_FILE is not set" 101
+  fi  
+
+  ###############################################################################
+  ## If Ansible has been choosen we have some work to do
+  if [ "x${VAULT_ENV_TYPE}x" == "xANSIBLEx" ]; then
+ 
+    ###############################################################################
+    ## Case in GitLab-CI
+    if [ "x${CI_ENV}x" == "xGITLAB_CIx" ]; then
+      
+      # In that case 
+      if [ "x${VAULT_ENV_PASSWORD}x" == "xx" ]; then
+        mErrorMessageAndExit "Variable VAULT_ENV_PASSWORD is not set" 101
+      fi
+      export VAULT_ENV_PASSFILE="tmpfile-vault-`date | md5sum | cut -d' ' -f1`"
+      echo $VAULT_ENV_PASSWORD > $VAULT_ENV_PASSFILE
+    ###############################################################################
+    ## Case in Other mode
+    else
+      if [ "x${VAULT_ENV_PASSFILE}x" == "xx" ]; then
+        mErrorMessageAndExit "Variable VAULT_ENV_PASSFILE is not set" 101
+      fi  
+    fi
+  fi  
+}

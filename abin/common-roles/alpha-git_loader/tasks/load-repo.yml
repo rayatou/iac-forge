@@ -1,0 +1,33 @@
+---
+# - name: "Git_loader | Erase Dir : {{ item.dest }} if exists"
+#   delegate_to: "{{ item.cible }}"
+#   ansible.builtin.file:
+#     path: "{{ item.dest }}"
+#     state: absent
+
+- name: "Git_loader | Get repo : {{ item.name }}"
+  delegate_to: "{{ item.cible }}"
+  ansible.builtin.git:
+    repo: "https://{{ item.user }}:{{ item.pass }}@{{ item.url }}"
+    dest: "{{ item.dest }}"
+  when: git_method == "http"
+
+- name: "Git_loader"
+  block:
+    - name: "Git_loader | Get repo : {{ item.name }}"
+      delegate_to: "{{ item.cible }}"
+      ansible.builtin.git:
+        repo: "{{ item.url }}"
+        dest: "{{ item.dest }}"
+        key_file:  "{{ item.key }}"
+        # mode: a+r
+      register: gitclone
+      environment:
+        GIT_SSL_NO_VERIFY: true
+      failed_when: false
+      changed_when: "'Failed to checkout branch master' in gitclone.msg"
+      ignore_errors: true
+    
+    - debug:
+        var: gitclone
+  when: git_method == "ssh"
